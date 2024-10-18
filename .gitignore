@@ -1,0 +1,15 @@
+# .gitignore
+
+# Tilt
+tilt_modules/
+
+# Node
+node_modules/
+
+# Go
+codema
+
+# CSS
+static/output.css
+codema-server
+.direnv

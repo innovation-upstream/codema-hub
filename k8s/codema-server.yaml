@@ -1,0 +1,52 @@
+# k8s/server.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: codema-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: codema-server
+  template:
+    metadata:
+      labels:
+        app: codema-server
+    spec:
+      containers:
+      - name: codema-server
+        image: localhost:30051/codema-server
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8090
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8090
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8090
+          initialDelaySeconds: 15
+          periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: codema-server
+spec:
+  selector:
+    app: codema-server
+  ports:
+    - protocol: TCP
+      port: 8090
+      targetPort: 8090
